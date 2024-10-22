@@ -1,0 +1,32 @@
+from web3 import Web3
+from typing import Optional
+from hexbytes import HexBytes
+web3 = Web3(Web3.HTTPProvider(endpoint_uri='https://api.securerpc.com/v1'))  # подключение к сети
+
+
+def info():
+    # смотрим всю инфу по сети
+    print("Информация о сети: ")
+    print(f"connected: {web3.is_connected()}")  # - False если не подключились
+    print(f"цена газа = {web3.eth.gas_price} WEI")  # кол-во Wei за единицу газа
+    priority_gas_price = web3.eth.max_priority_fee  # кол-во приоритетного газа
+    print(f"макс. приоритетный газ = {priority_gas_price} wei ")  # вывод
+    print(f"current block number: {web3.eth.block_number}")  # получение и вывод номера блока
+    print(f"number of current chain is {web3.eth.chain_id}")  # номер сети
+    # print(web3.eth.get_block_number) /todoo
+
+
+def info_wallet(wallet_address):
+    print("\nИнформация о кошельке: ")
+    # 0x078822e3002e800c87fb3723378aa8fb33f8f131 - мой
+    # 0x2a647559a6c5dcb76ce1751101449ebbc039b157 - с балансом
+    checksum_address = Web3.to_checksum_address(wallet_address)  # проверка на валидность адреса в сети
+    balance = web3.eth.get_balance(checksum_address)  # получение баланса в Wei
+    print(f"balance of = {balance} Wei")  # вывод баланса в Wei
+    ether_balance = web3.from_wei(balance, 'ether')  # конвертация баланса в ETH
+    print(f"баланс в ETH = {ether_balance}")  # вывод баланса в ETH
+
+
+info()
+wallet_addr = input('Введите адрес - ')
+info_wallet(wallet_addr)
